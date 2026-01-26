@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Tycoon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <svg style="display: none;">
+    <!-- Wind Turbine by priyanka from https://thenounproject.com/browse/icons/term/wind-turbine/ (Modified) -->
+    <symbol id="svg-wind_turbine" viewBox="0 0 100 100">
+        <path d="M50,85 L47,40 H53 L50,85 Z" fill="currentColor"/>
+        <circle cx="50" cy="35" r="7" fill="currentColor"/>
+        <path d="M50,35 L20,10 M50,35 L80,10 M50,35 L50,5 L50,10" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M50,35 L25,20 L50,5 L75,20 Z" fill="currentColor" fill-opacity="0.8"/>
+        <path d="M50,35 L20,10 A20 20 0 0 1 50 5 L80 10 A20 20 0 0 1 50 35 Z" fill="currentColor" fill-opacity="0.6"/>
+    </symbol>
+    <!-- Hydro Plant (Dam) by Three Six Five from https://thenounproject.com/browse/icons/term/dam/ (Modified) -->
+    <symbol id="svg-hydro_plant" viewBox="0 0 100 100">
+        <path d="M15,85 L25,40 H75 L85,85 Z" fill="currentColor" opacity="0.7"/>
+        <rect x="25" y="30" width="50" height="55" fill="currentColor"/>
+        <path d="M25,30 L15,25 L15,85 L25,85 Z" fill="currentColor" opacity="0.5"/>
+        <path d="M75,30 L85,25 L85,85 L75,85 Z" fill="currentColor" opacity="0.5"/>
+        <path d="M20,70 V30 h60 v40 z M20,35 h60 M20,40 h60 M20,45 h60 M20,50 h60 M20,55 h60 M20,60 h60 M20,65 h60" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="50" cy="60" r="10" fill="white" opacity="0.3"/>
+        <circle cx="50" cy="60" r="5" fill="white" opacity="0.5"/>
+    </symbol>
+    <!-- Coal Plant (Factory) by smalllike from https://thenounproject.com/browse/icons/term/factory/ (Modified) -->
+    <symbol id="svg-coal_plant" viewBox="0 0 100 100">
+        <rect x="20" y="50" width="60" height="35" fill="currentColor" opacity="0.8"/>
+        <rect x="30" y="35" width="20" height="15" fill="currentColor" opacity="0.7"/>
+        <rect x="50" y="35" width="20" height="15" fill="currentColor" opacity="0.7"/>
+        <path d="M35,35 V15 H45 V35 Z" fill="currentColor" opacity="0.9"/>
+        <path d="M55,35 V15 H65 V35 Z" fill="currentColor" opacity="0.9"/>
+        <path d="M35,15 A10 10 0 0 1 45 5 V15 H35 Z" fill="currentColor" opacity="0.9"/>
+        <path d="M55,15 A10 10 0 0 1 65 5 V15 H55 Z" fill="currentColor" opacity="0.9"/>
+        <path d="M38,10 Q40,0 42,10" stroke="white" stroke-width="2" fill="none"/>
+        <path d="M58,10 Q60,0 62,10" stroke="white" stroke-width="2" fill="none"/>
+        <path d="M70,85 V45 h10 v-15 h-15 v-10 h-10 v10 h-35 v40 h-5 v5 h65 v-5 z m-35,-35 h10 v10 h-10 z m15,0 h10 v10 h-10 z m-15,15 h10 v10 h-10 z m15,0 h10 v10 h-10 z" stroke="none" fill="currentColor" opacity="0.3"/>
+    </symbol>
+    <!-- Solar Panel by Adrien Coquet from https://thenounproject.com/browse/icons/term/solar-panel/ (Modified) -->
+    <symbol id="svg-solar_panel" viewBox="0 0 100 100">
+        <rect x="20" y="40" width="60" height="30" rx="5" fill="currentColor" opacity="0.9"/>
+        <line x1="20" y1="55" x2="80" y2="55" stroke="white" stroke-width="1.5"/>
+        <line x1="50" y1="40" x2="50" y2="70" stroke="white" stroke-width="1.5"/>
+        <line x1="35" y1="40" x2="35" y2="70" stroke="white" stroke-width="1"/>
+        <line x1="65" y1="40" x2="65" y2="70" stroke="white" stroke-width="1"/>
+        <path d="M30,40 L25,30 L75,30 L70,40 Z" fill="currentColor" opacity="0.7"/>
+        <path d="M25,30 Q50,20 75,30" stroke="currentColor" stroke-width="2" fill="none"/>
+    </symbol>
+    <!-- Geothermal by Bohdan Burmich from https://thenounproject.com/browse/icons/term/geothermal/ (Modified) -->
+    <symbol id="svg-geothermal_plant" viewBox="0 0 100 100">
+        <path d="M30,85 A20,10 0 0 1 70,85 Q65,65 50,60 Q35,65 30,85 Z" fill="currentColor" opacity="0.7"/>
+        <path d="M40,55 A15,8 0 0 1 60,55 Q55,40 50,35 Q45,40 40,55 Z" fill="currentColor" opacity="0.8"/>
+        <path d="M45,30 A10,5 0 0 1 55,30 Q53,20 50,18 Q47,20 45,30 Z" fill="currentColor" opacity="0.9"/>
+        <path d="M48,15 Q50,5 52,15" stroke="white" stroke-width="2" fill="none"/>
+        <path d="M40,25 Q50,15 60,25" stroke="white" stroke-width="2" fill="none"/>
+        <path d="M35,35 Q50,25 65,35" stroke="white" stroke-width="2" fill="none"/>
+    </symbol>
+    <!-- Nuclear Plant (Cooling Tower) by iconsphere from https://thenounproject.com/browse/icons/term/cooling-tower/ (Modified) -->
+    <symbol id="svg-nuclear_plant" viewBox="0 0 100 100">
+        <path d="M30,85 H70 V40 H30 Z" fill="currentColor" opacity="0.7"/>
+        <path d="M25,40 Q30,20 50,15 Q70,20 75,40 Z" fill="currentColor" opacity="0.8"/>
+        <path d="M25,40 L30,85 M75,40 L70,85" stroke="currentColor" stroke-width="2" fill="none"/>
+        <circle cx="50" cy="55" r="10" fill="white" opacity="0.3"/>
+        <circle cx="50" cy="55" r="5" fill="white" opacity="0.5"/>
+        <path d="M35,20 Q50,10 65,20" stroke="white" stroke-width="2" fill="none"/>
+        <path d="M38,25 Q50,18 62,25" stroke="white" stroke-width="1.5" fill="none"/>
+    </symbol>
+</svg>
+
+    <h1>Energy Tycoon</h1>
+
+    <div class="stats-container">
+        <div>Elektřina: <span id="power-display">0</span> W</div>
+        <div>Peníze: <span id="money-display">1000</span> $</div>
+        <div>Výzkumné body: <span id="research-points-display">0</span></div>
+    </div>
+
+    <button id="open-research-btn">Výzkum</button>
+
+    <div id="game-container">
+        <div id="game-map"></div>
+        <div id="build-menu">
+            <h2>Stavět</h2>
+            <button id="cancel-build">Zrušit stavbu</button>
+        </div>
+    </div>
+
+    <div id="research-panel" class="hidden">
+        <button id="close-research-btn" class="close-btn">X</button>
+        <h2>Výzkumné centrum</h2>
+        <div class="research-stats">
+            Výzkumné body: <span id="research-points-panel-display">0</span>
+        </div>
+        <div class="research-actions">
+            <h3>Investovat do výzkumu</h3>
+            <p>Investujte peníze a získejte výzkumné body.</p>
+            <button id="invest-research-btn" data-cost="500" data-rp="1">Investovat 500 $ (1 RP)</button>
+            <p class="research-status"></p>
+        </div>
+        <h3>Strom dovedností</h3>
+        <div id="skill-tree-container">
+            <!-- Skills will be rendered here by JS -->
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,462 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+    --primary-color: #4A90E2; /* Blue */
+    --secondary-color: #50E3C2; /* Teal */
+    --accent-color: #FFC107; /* Amber */
+    --background-color: #F7F9FB; /* Light Gray */
+    --text-color: #333; /* Dark Gray */
+    --dark-background: #2C3E50; /* Dark Blue-Gray */
+    --light-text: #ECF0F1; /* Off-White */
+    --grass: #87C38F; /* Green */
+    --water: #5B99D4; /* Lighter Blue */
+    --mountain: #95A5A6; /* Gray-Blue */
+    --building-bg: #ffffff;
+    --building-border: #E0E0E0;
+    --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-medium: 0 5px 15px rgba(0, 0, 0, 0.12);
+    --shadow-deep: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 30px; /* Increased padding */
+    min-height: 100vh;
+}
+
+h1 {
+    color: var(--dark-background);
+    font-weight: 700;
+    font-size: 3.5em; /* Slightly larger */
+    margin-bottom: 30px; /* Increased margin */
+    letter-spacing: 1px;
+    text-shadow: var(--shadow-light);
+}
+
+.stats-container {
+    display: flex;
+    gap: 50px; /* Increased gap */
+    background: var(--building-bg);
+    padding: 20px 40px; /* Increased padding */
+    border-radius: 15px; /* More rounded */
+    box-shadow: var(--shadow-medium); /* Medium shadow */
+    margin-bottom: 40px; /* Increased margin */
+    font-size: 1.5em; /* Slightly larger */
+    font-weight: 600;
+    color: var(--dark-background);
+}
+
+.stats-container div {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Increased gap */
+}
+
+#game-container {
+    display: flex;
+    gap: 40px; /* Increased gap */
+    align-items: flex-start;
+}
+
+#game-map {
+    display: grid;
+    grid-template-columns: repeat(20, 40px);
+    grid-template-rows: repeat(20, 40px);
+    border: 3px solid var(--dark-background);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-deep); /* Deeper shadow */
+    transition: transform 0.3s ease;
+}
+
+#game-map:hover {
+    transform: scale(1.005);
+}
+
+.tile {
+    width: 40px;
+    height: 40px;
+    box-sizing: border-box;
+    border-right: 1px solid rgba(0,0,0,0.07); /* Slightly stronger border */
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+}
+
+.tile.grass { background-color: var(--grass); }
+.tile.water { background-color: var(--water); }
+.tile.mountain { background-color: var(--mountain); }
+
+.tile:hover {
+    filter: brightness(1.1);
+    z-index: 2; /* Bring hovered tile to front for better visibility */
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,0.8); /* Highlight on hover */
+}
+
+.tile.forbidden::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(231, 76, 60, 0.5); /* Red overlay for forbidden */
+    z-index: 1;
+    pointer-events: none; /* Allow clicks to pass through */
+}
+
+/* Building styles */
+.tile > .building-icon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 8px; /* Increased padding for icons */
+    transition: transform 0.2s ease;
+    color: var(--dark-background); /* Default icon color */
+}
+
+.tile:hover > .building-icon {
+    transform: scale(1.15); /* More pronounced scale on hover */
+}
+
+/* Specific icon colors if needed, but primary color is used now */
+
+#build-menu {
+    width: 320px; /* Slightly wider */
+    padding: 25px; /* Increased padding */
+    background: var(--building-bg);
+    border-radius: 15px; /* More rounded */
+    box-shadow: var(--shadow-medium);
+    display: flex;
+    flex-direction: column;
+}
+
+#build-menu h2 {
+    margin-top: 0;
+    text-align: center;
+    color: var(--dark-background);
+    font-weight: 700; /* Bolder */
+    margin-bottom: 25px; /* Increased margin */
+    font-size: 1.8em;
+}
+
+.build-btn {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px; /* Adjusted padding */
+    margin-bottom: 18px; /* Adjusted margin */
+    border: 2px solid var(--building-border);
+    border-radius: 12px; /* More rounded */
+    background-color: transparent;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-light); /* Light shadow for buttons */
+}
+
+.build-btn:last-of-type { /* To remove margin from the last build button before cancel */
+    margin-bottom: 25px;
+}
+
+.build-btn-icon {
+    width: 55px; /* Slightly larger */
+    height: 55px; /* Slightly larger */
+    flex-shrink: 0;
+    background-color: #E9F2FC; /* Light blue background */
+    border-radius: 10px; /* More rounded */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.build-btn-icon svg {
+    width: 75%; /* Slightly larger icon inside */
+    height: 75%;
+    color: var(--primary-color);
+}
+
+.build-btn-info {
+    flex-grow: 1;
+}
+
+.build-btn:hover {
+    transform: translateY(-4px); /* More pronounced lift */
+    box-shadow: var(--shadow-deep); /* Deeper shadow on hover */
+    border-color: var(--primary-color);
+}
+
+.build-btn.selected {
+    border-color: var(--primary-color);
+    background-color: #E9F2FC;
+    transform: translateY(-2px); /* Subtle lift when selected */
+    box-shadow: var(--shadow-medium);
+}
+
+.build-btn strong {
+    font-size: 1.25em; /* Slightly larger */
+    font-weight: 700;
+    color: var(--dark-background);
+}
+
+.build-btn p {
+    margin: 6px 0; /* Adjusted margin */
+    font-size: 1em; /* Slightly larger */
+    color: #555;
+}
+
+.build-btn small {
+    font-size: 0.9em; /* Slightly larger */
+    color: #777;
+}
+
+#cancel-build {
+    padding: 14px; /* Increased padding */
+    border: 2px solid #E74C3C;
+    background-color: #FEE; /* Very light red background */
+    color: #E74C3C;
+    border-radius: 12px; /* More rounded */
+    cursor: pointer;
+    margin-top: auto; /* Pushes it to the bottom */
+    font-weight: 700;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-light);
+}
+
+#cancel-build:hover {
+    background-color: #E74C3C;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+#open-research-btn {
+    padding: 15px 30px; /* Increased padding */
+    margin-bottom: 40px; /* Increased margin */
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    border-radius: 12px; /* More rounded */
+    cursor: pointer;
+    font-size: 1.3em; /* Slightly larger */
+    font-weight: 700;
+    box-shadow: var(--shadow-medium);
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+#open-research-btn:hover {
+    transform: translateY(-5px) scale(1.02); /* More pronounced lift and slight scale */
+    box-shadow: var(--shadow-deep);
+}
+
+#research-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%; /* Slightly wider */
+    max-width: 950px; /* Max width increased */
+    height: 90%; /* Slightly taller */
+    background-color: var(--background-color);
+    border-radius: 20px; /* More rounded */
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25); /* Deeper shadow */
+    padding: 40px; /* Increased padding */
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    overflow-y: auto;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -40%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+#research-panel.hidden {
+    display: none;
+}
+
+#research-panel h2 {
+    text-align: center;
+    color: var(--dark-background);
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 30px; /* Increased margin */
+    font-size: 2.5em;
+    text-shadow: var(--shadow-light);
+}
+
+#research-panel .close-btn {
+    position: absolute;
+    top: 25px; /* Adjusted position */
+    right: 30px; /* Adjusted position */
+    font-size: 2.2em; /* Slightly larger */
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.2s, transform 0.2s;
+}
+#research-panel .close-btn:hover {
+    color: var(--E74C3C); /* Red on hover */
+    transform: scale(1.1);
+}
+
+.research-stats {
+    text-align: center;
+    margin-bottom: 25px; /* Adjusted margin */
+    font-size: 1.4em;
+    font-weight: 700;
+    background-color: #E9F2FC;
+    padding: 18px; /* Adjusted padding */
+    border-radius: 12px;
+    color: var(--primary-color);
+    box-shadow: var(--shadow-light);
+}
+
+.research-actions {
+    margin-bottom: 35px; /* Adjusted margin */
+    padding: 25px; /* Adjusted padding */
+    border-radius: 12px;
+    background-color: var(--building-bg);
+    text-align: center;
+    box-shadow: var(--shadow-light);
+}
+
+.research-actions h3 {
+    margin-top: 0;
+    color: var(--dark-background);
+    font-size: 1.6em;
+    margin-bottom: 15px;
+}
+
+#invest-research-btn {
+    display: inline-block;
+    padding: 14px 28px; /* Adjusted padding */
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.15em; /* Slightly larger */
+    font-weight: 600;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: var(--shadow-light);
+}
+
+#invest-research-btn:hover {
+    background-color: #3A7DCE;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+.research-status {
+    text-align: center;
+    color: #555;
+    font-style: italic;
+    min-height: 1.2em;
+    margin-top: 20px; /* Adjusted margin */
+    font-size: 0.95em;
+}
+
+#skill-tree-container {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* Slightly larger cards */
+    gap: 25px; /* Increased gap */
+    padding: 25px; /* Increased padding */
+    background-color: #EFEFEF; /* Slightly darker background for contrast */
+    border-radius: 15px;
+    position: relative;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.05); /* Inner shadow for depth */
+}
+
+.skill-card {
+    border: 2px solid var(--building-border);
+    border-radius: 15px; /* More rounded */
+    padding: 20px; /* Increased padding */
+    background-color: var(--building-bg);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease; /* Slightly longer transition */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 160px; /* Slightly taller */
+    box-shadow: var(--shadow-light);
+}
+
+.skill-card:hover {
+    transform: translateY(-6px) scale(1.01); /* More pronounced lift and slight scale */
+    box-shadow: var(--shadow-medium);
+}
+
+.skill-card.can-unlock {
+     border-color: var(--primary-color);
+     background-color: #e6f0ff;
+}
+
+.skill-card.locked {
+    background-color: #f0f0f0; /* Slightly darker locked background */
+    color: #888;
+    cursor: not-allowed;
+    border-color: #ddd;
+    opacity: 0.6; /* More faded */
+    box-shadow: none; /* No shadow for locked */
+}
+.skill-card.locked:hover {
+    transform: none;
+    box-shadow: none;
+}
+.skill-card.locked h4, .skill-card.locked p, .skill-card.locked small {
+    color: #888;
+}
+
+.skill-card.unlocked {
+    border-color: var(--secondary-color);
+    background-color: #e0ffee;
+    cursor: default;
+    box-shadow: var(--shadow-light);
+}
+.skill-card.unlocked:hover {
+    transform: none;
+    box-shadow: var(--shadow-light);
+}
+
+.skill-card h4 {
+    margin-top: 5px;
+    margin-bottom: 12px; /* Adjusted margin */
+    color: var(--dark-background);
+    font-weight: 700;
+    font-size: 1.3em;
+}
+
+.skill-card p {
+    font-size: 0.95em;
+    margin-bottom: 12px; /* Adjusted margin */
+    flex-grow: 1;
+    line-height: 1.4;
+}
+
+.skill-card small {
+    display: block;
+    font-size: 1em; /* Slightly larger */
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.skill-card.unlocked small {
+    color: var(--secondary-color);
+}
