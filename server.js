@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = 3000;
+const PORT = 3001;
 
 // Helper to send files and set MIME types
 const sendFile = (res, filePath, contentType) => {
@@ -23,9 +23,56 @@ const sendFile = (res, filePath, contentType) => {
 };
 
 const server = http.createServer((req, res) => {
-    console.log(`Request for ${req.url}`);
+    console.log(`Request for ${req.url} [${req.method}]`);
 
-    // Simple routing
+    // API Routes
+    if (req.url === '/api/save' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
+        req.on('end', () => {
+            try {
+                // Basic validation: Ensure it's valid JSON
+                JSON.parse(body); 
+                fs.writeFile(path.join(__dirname, 'gamestate.json'), body, 'utf8', (err) => {
+                    if (err) {
+                        res.writeHead(500, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ message: 'Error saving game state.' }));
+                        return;
+                    }
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ message: 'Game state saved successfully.' }));
+                });
+            } catch (error) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ message: 'Invalid JSON format.' }));
+            }
+        });
+        return;
+    }
+
+    if (req.url === '/api/load' && req.method === 'GET') {
+        fs.readFile(path.join(__dirname, 'gamestate.json'), 'utf8', (err, data) => {
+            if (err) {
+                if (err.code === 'ENOENT') {
+                    // If file doesn't exist, send back a default/empty state
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({})); // Empty object signifies no save data
+                } else {
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ message: 'Error loading game state.' }));
+                }
+                return;
+            }
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(data);
+        });
+        return;
+    }
+
+
+    // Simple static file routing
     switch (req.url) {
         case '/':
             sendFile(res, path.join(__dirname, 'index.html'), 'text/html');
@@ -37,18 +84,8 @@ const server = http.createServer((req, res) => {
             sendFile(res, path.join(__dirname, 'game.js'), 'application/javascript');
             break;
         default:
-            // Attempt to serve other files if needed, otherwise 404
-            const publicPath = path.join(__dirname, req.url);
-            // Basic security check to prevent directory traversal
-            if (publicPath.startsWith(__dirname)) {
-                 // For simplicity, we only define content types for the main files.
-                 // A real server would have a comprehensive MIME type map.
-                res.writeHead(404, { 'Content-Type': 'text/plain' });
-                res.end('404 Not Found');
-            } else {
-                res.writeHead(403, { 'Content-Type': 'text/plain' });
-                res.end('403 Forbidden');
-            }
+            res.writeHead(404, { 'Content-Type': 'text/plain' });
+            res.end('404 Not Found');
             break;
     }
 });
