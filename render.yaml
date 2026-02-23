@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: energy-tycoon
+    runtime: docker
+    # Render automaticky builduje z Dockerfile v root adresáři repa
+    dockerfilePath: ./Dockerfile
+    plan: free
+    # PORT nastavuje Render automaticky – server.js ho čte z process.env.PORT
+    envVars:
+      - key: SUPABASE_URL
+        sync: false   # Hodnotu zadáš ručně v Render dashboardu
+      - key: SUPABASE_SERVICE_KEY
+        sync: false   # Hodnotu zadáš ručně v Render dashboardu
