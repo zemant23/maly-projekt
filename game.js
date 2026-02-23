@@ -432,10 +432,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     async function init() {
+        // Zkontroluj přihlášení
+        try {
+            const meRes = await fetch('/api/me');
+            if (!meRes.ok) { window.location.href = '/login'; return; }
+            const meData = await meRes.json();
+            const playerName = document.getElementById('player-name');
+            const logoutBtn = document.getElementById('logout-btn');
+            if (playerName) playerName.textContent = meData.username;
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async () => {
+                    await fetch('/api/logout', { method: 'POST' });
+                    window.location.href = '/login';
+                });
+            }
+        } catch (e) { window.location.href = '/login'; return; }
+
         const loaded = await loadGameState();
-        if (!loaded) {
-            setupNewGame();
-        }
+        if (!loaded) { setupNewGame(); }
 
         renderMap();
         updateDisplays();
@@ -452,7 +466,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setInterval(calculateAndApplyResources, 1000);
         setInterval(saveGameState, 15000);
-        
         console.log("Hra Energy Tycoon byla spuštěna.");
     }
 
