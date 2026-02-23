@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setupNewGame() {
         gameState = {
-            money: 1000000,
+            money: 2000,
             power: 0,
             universe: JSON.parse(JSON.stringify(INITIAL_UNIVERSE)), // Deep copy to prevent mutation of initial state
             selectedSystemId: 'sol',
